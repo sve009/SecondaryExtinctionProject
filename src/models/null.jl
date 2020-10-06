@@ -7,7 +7,7 @@
 # E[x] = C = 1 / (1 + beta)
 # => beta = 1 / C - 1
 
-using Distributions
+using Random, Distributions
 
 function null_model(S, C)
     G = fill(0, S, S)
@@ -22,6 +22,9 @@ function null_model(S, C)
         n = x * S
         for j in 1:n
             v = rand(1:S)
+            while G[v, i] == 1
+                v = rand(1:S)
+            end
             G[v, i] = 1
         end
     end
