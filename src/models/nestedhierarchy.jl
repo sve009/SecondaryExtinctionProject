@@ -1,4 +1,8 @@
-function nested_heirarchy_model(S, C)
+using LightGraphs
+using Distributions
+using Random
+
+function nested_hierarchy_model(S, C)
     
     G = SimpleDiGraph(S)
     
@@ -6,7 +10,7 @@ function nested_heirarchy_model(S, C)
     niches = [rand(unif) for i=1:S]
     niches = sort(niches)
     
-    beta = 1 / ((1/(2C)) - 1)
+    beta = ((1/(2 * C)) - 1)
     dist = Beta(1, beta)
     
     L = C * S * S
@@ -47,6 +51,9 @@ function nested_heirarchy_model(S, C)
             possible = shuffle(groups[con_group[pred]])
             for prey in possible
                 if r > 0                     # move to stage 3 when no prey are left
+                    if has_edge(G, prey, pred)
+                        continue
+                    end
                     add_edge!(G,prey,pred)
                     r -= 1
                 end
@@ -59,6 +66,9 @@ function nested_heirarchy_model(S, C)
             filter!(p-> inneighbors(G,p)==0,possible)
             for prey in shuffle!(possible)
                 if r > 0
+                    if has_edge(G, prey, pred)
+                        continue
+                    end
                     add_edge!(G,prey,pred)
                     r -= 1
                 else
@@ -71,6 +81,9 @@ function nested_heirarchy_model(S, C)
             possible = [p for p in pred:S-1]
             for prey in shuffle!(possible)
                 if r > 0
+                    if has_edge(G, prey, pred)
+                        continue
+                    end
                     add_edge!(G,prey,pred)
                     if con_group[pred] != 0
                         x = groups[con_group[pred]]
@@ -83,5 +96,5 @@ function nested_heirarchy_model(S, C)
             end 
         end
     end
-    return G
+    return adjacency_matrix(G)
 end

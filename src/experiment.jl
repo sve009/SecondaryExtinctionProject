@@ -9,18 +9,26 @@ include("models/null.jl")
 
 using Plots
 
+# data: 4 x 4 x 3 x 5
+#     : #species x connectance x method x model
+#     1 = niche
+#     2 = gen cascade
+#     3 = null
+#     4 = cascade
+#     5 = nested hierarchy
+
 function experiment()
     S = [25, 50, 100, 200]
     Cs = [.05, .10, .15, .30]
     method = [most_connected_removal, least_connected_removal, rand_removal]
 
-    results = fill(0, 4, 4, 3, 5)
+    results = fill(0.0, 4, 4, 3, 5)
 
     for i in 1:4
         for j in 1:4
             for k in 1:3
-                accum = fill(0, 5)
-                for l in 1:100
+                accum = fill(0.00, 5)
+                for l in 1:10
                     s = S[i]
                     c = Cs[j]
                     m = method[k]
@@ -30,13 +38,15 @@ function experiment()
                     push!(graphs, niche_model(s, c))
                     push!(graphs, generalized_cascade_model(s, c))
                     push!(graphs, null_model(s, c))
+                    push!(graphs, cascade_model(s, c))
+                    push!(graphs, nested_hierarchy_model(s, c))
 
                     for index in 1:5
-                        accum[index] += find_robustness(graphs[index], m)
+                        @show accum[index] = accum[index] + find_robustness(graphs[index], m)
                     end
                 end
                 for index in 1:5
-                    results[i, j, k, index] = accum[index] / 100
+                    results[i, j, k, index] = accum[index] / 10
                 end
             end
         end
@@ -63,6 +73,8 @@ function find_robustness(g, m)
 end
 
 function remove_species(g, species, x)
+    S = size(g, 1)
+    
     species[x] = 0
     for i in 1:S
         if g[x, i] == 1
@@ -104,11 +116,11 @@ function most_connected_removal(g, s)
     end
 
     max = 0
-    index = 0
+    index = 1
 
     for i in 1:length(sums)
         n = sums[i]
-        if n > max && species[i] == 1
+        if n > max && s[i] == 1
             max = n
             index = i
         end
@@ -127,7 +139,7 @@ function least_connected_removal(g, s)
         push!(sums, accum)
     end
 
-    index = 0
+    index = 1
     while s[index] == 0
         index += 1
     end
