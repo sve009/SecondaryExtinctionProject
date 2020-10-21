@@ -7,7 +7,7 @@ function cascade_model(S, C)
     for i in 1:S
         for j in i+1:S
             if rand() < p
-                G[j,i] = 1
+                G[i,j] = 1
             end
         end
     end

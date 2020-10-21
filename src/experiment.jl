@@ -17,6 +17,11 @@ using Plots
 #     4 = cascade
 #     5 = nested hierarchy
 
+# This function returns the 4 x 4 x 3 x 5 tensor "data", where each
+# entry is the robustness for that combination of variables
+# @pre Basically nothing, just call it
+# @post Returns the experiment data
+
 function robustness_experiment()
     S = [25, 50, 100, 200]
     Cs = [.05, .10, .15, .30]
@@ -54,6 +59,11 @@ function robustness_experiment()
 
     return results
 end
+
+# This function creates webs and simulates removing eighty percent of the
+# species before checking for collapse.
+# @pre Again, essentially nothing
+# @post Another 4 x 4 x 3 x 5 tensor, this time holding the rates of collapse
 
 function web_collapse_experiment()
     S = [25, 50, 100, 200]
@@ -93,6 +103,14 @@ function web_collapse_experiment()
     return results
 end
 
+# A pretty simple helper function to find the robustness
+# of a network. It simply performs primary extinctions until 
+# less than half of species remain, then returns the number
+# of iterations divided by S
+# @pre g is an adjacency matrix and m is a function that takes
+#      in an adjacency matrix and vector.
+# @post Returns the proportion of species removed through primary
+#       extinction before only half the web remained.
 function find_robustness(g, m)
     iterations = 0
 
@@ -110,6 +128,13 @@ function find_robustness(g, m)
     return iterations / S
 end
 
+# The anlalog to the find_robustness method for web collapse.
+# It does essentially the same thing, but waits until at least
+# eighty percent of species have been removed.
+# @pre g is an adjacency matrix and m is a function that takes
+#      in an adjacency matrix and vector.
+# @post Returns whether no species remain in the web after removing
+#       eighty percent of them.
 function collapse(g, m)
     S = size(g, 1)
     species = fill(1, S)
@@ -122,6 +147,14 @@ function collapse(g, m)
     
     return sum(species) == 0 ? 1 : 0
 end
+
+# A simple recursive method which removes a given species,
+# and then calls itself again if another species is left with
+# no food.
+# @pre g is an S x S adjacency matrix, species is a 1 x S vector,
+#      1 <= x <= S
+# @post Doesn't return anything, rather simply removes the species
+#       by altering the species vector.
 
 function remove_species(g, species, x)
     S = size(g, 1)
@@ -137,6 +170,11 @@ function remove_species(g, species, x)
     end
 end
 
+# Quick helper method to calculate the sum of a column in
+# an adjacency matrix. Used to check if a consumer no longer
+# has any food sources.
+# @pre g is a m x n matrix, 1 <= i <= n
+# @post The sum of values in column i
 function col_sum(g, i)
     accum = 0
     for j in 1:size(g, 2)
@@ -147,6 +185,10 @@ end
 
 # Removal measures
 
+# Chooses a random node within g
+# @pre g is an adjacency matrix, s is a vector
+# @post returns x, 1 <= x <= S
+
 function rand_removal(g, s)
     x = rand(1:length(s))
     while s[x] == 0
@@ -155,6 +197,11 @@ function rand_removal(g, s)
 
     return x
 end
+
+# Finds the most connected node in g that has not
+# yet been removed.
+# @pre g is adjacency matrix, s is vector of length S
+# @post x is the vertex of greatest degree. s[x] = 1
 
 function most_connected_removal(g, s)
     sums = []
@@ -182,6 +229,11 @@ function most_connected_removal(g, s)
 
     return index
 end
+
+# Finds the least connected node in g that has not
+# yet been removed.
+# @pre g is adjacency matrix, s is vector of length S
+# @post x is the vertex of least degree. s[x] = 1
 
 function least_connected_removal(g, s)
     sums = []
