@@ -17,6 +17,18 @@ using Plots
 #     4 = cascade
 #     5 = nested hierarchy
 
+# Procedure
+#   robustness_experiment
+# Parameters
+#  none
+# Purpose
+#   calculates and plots robustness for each combination of S, C, model, and ordering
+# Produces
+#   results, an array of plots
+# Preconditions
+#   none
+# Postconditions
+#   none
 function robustness_experiment()
     S = [25, 50, 100, 200]
     Cs = [.05, .10, .15, .30]
@@ -55,6 +67,18 @@ function robustness_experiment()
     return results
 end
 
+# Procedure
+#   web_collapse_experiment
+# Parameters
+#   none
+# Purpose
+#   calculates and plots web collapse for each combination of S,C, model, and removal
+# Produces
+#   results, an array of plots
+# Preconditions
+#   none
+# Postconditions
+#   none
 function web_collapse_experiment()
     S = [25, 50, 100, 200]
     Cs = [.05, .10, .15, .30]
@@ -93,6 +117,19 @@ function web_collapse_experiment()
     return results
 end
 
+# Procedure
+#   find_robustness
+# Parameters
+#   g, an array
+#   m, a function
+# Purpose
+#   calculates the robustness of a model and extinction order
+# Produces
+#   robustness, a float
+# Preconditions
+#   none
+# Postconditions
+#   none
 function find_robustness(g, m)
     iterations = 0
 
@@ -110,6 +147,19 @@ function find_robustness(g, m)
     return iterations / S
 end
 
+# Procedure
+#   collapse
+# Parameters
+#   g, an array
+#   m, a function
+# Purpose
+#   determines if a web collapses
+# Produces
+#   collapse, an int
+# Preconditions
+#   none
+# Postconditions
+#   none
 function collapse(g, m)
     S = size(g, 1)
     species = fill(1, S)
@@ -123,6 +173,20 @@ function collapse(g, m)
     return sum(species) == 0 ? 1 : 0
 end
 
+# Procedure
+#   remove_species
+# Parameters
+#   g, an array
+#   species, a list
+#   x, an int
+# Purpose
+#   removes a species connections from a graph
+# Produces
+#   none
+# Preconditions
+#   none
+# Postconditions
+#   row_sum(g, x) == 0
 function remove_species(g, species, x)
     S = size(g, 1)
     
@@ -137,6 +201,19 @@ function remove_species(g, species, x)
     end
 end
 
+# Procedure
+#   col_sum
+# Parameters
+#   g, an array
+#   i, an int
+# Purpose
+#   computes the sum of a column
+# Produces
+#   accum, an int
+# Preconditions
+#   none
+# Postconditions
+#   none
 function col_sum(g, i)
     accum = 0
     for j in 1:size(g, 2)
@@ -147,6 +224,19 @@ end
 
 # Removal measures
 
+# Procedure
+#   rand_removal
+# Parameters
+#   g, an array
+#   s, a list
+# Purpose
+#   removes a random element of s
+# Produces
+#   x, an int
+# Preconditions
+#   none
+# Postconditions
+#   none
 function rand_removal(g, s)
     x = rand(1:length(s))
     while s[x] == 0
@@ -156,6 +246,19 @@ function rand_removal(g, s)
     return x
 end
 
+# Procedure
+#   most_cnnected_removal
+# Parameters
+#   g, an array
+#   s, a list
+# Purpose
+#   removes the most connected element in g from s
+# Produces
+#   index, an int
+# Preconditions
+#   none
+# Postconditions
+#   none
 function most_connected_removal(g, s)
     sums = []
     for i in 1:length(s)
@@ -183,6 +286,19 @@ function most_connected_removal(g, s)
     return index
 end
 
+# Procedure
+#   least_connected_removal
+# Parameters
+#   g, an array
+#   s, a list
+# Purpose
+#   removes the least connected element in g from s
+# Produces
+#   x, an int
+# Preconditions
+#   none
+# Postconditions
+#   none
 function least_connected_removal(g, s)
     sums = []
     for i in 1:length(s)
