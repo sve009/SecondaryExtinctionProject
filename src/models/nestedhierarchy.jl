@@ -2,6 +2,20 @@ using LightGraphs
 using Distributions
 using Random
 
+# Procedure
+#   nested_heirarchy_model
+# Parameters
+#   S, an integer
+#   C, a float
+# Purpose
+#   Generates the adjacency matrix of a nested heirarchy model food web
+# Produces
+#   G, a S x S matrix
+# Preconditions
+#   S > 0
+#   0 < C < 1
+# Postconditions
+#   none
 function nested_hierarchy_model(S, C)
     
     G = SimpleDiGraph(S)
@@ -28,7 +42,7 @@ function nested_hierarchy_model(S, C)
         
         consumers = []
         
-        while r > 0     #stage 1 - choose random prey with a smaller niche value
+        while r > 0     #Stage 1 - choose random prey with a smaller niche value
             possible = [p for p in 1:pred-1]
             prey = rand(possible)
             consumers = inneighbors(G,prey)
