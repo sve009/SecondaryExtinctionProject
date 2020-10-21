@@ -1,5 +1,19 @@
 using Random, Distributions
 
+# Procedure
+#   niche_model
+# Parameters
+#   S, an integer
+#   C, a float
+# Purpose
+#   Generates the adjacency matrix of a niche model food web
+# Produces
+#   G, a S x S matrix
+# Preconditions
+#   S > 0
+#   0 < C < 1
+# Postconditions
+#   none
 function niche_model(S, C)
     G = fill(0, S, S)
 
