@@ -5,6 +5,11 @@ using Plots.PlotMeasures
 
 plotly()
 
+# This function takes a 4 x 4 x 3 x 5 tensor
+# and simply turns it into several plots.
+# @pre data 4 x 4 x 3 x 5 tensor. pt is max y-axis bound
+# @post Plots the data
+
 function plot_data(data, pt)
 
     S = [25, 50, 100, 200]
@@ -91,6 +96,8 @@ function plot_data(data, pt)
                 )
            )
 end
+
+# Actually runs the experiment.
 
 data1 = robustness_experiment()
 plot_data(data1, .60)

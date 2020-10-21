@@ -22,6 +22,19 @@ using Plots
 # @pre Basically nothing, just call it
 # @post Returns the experiment data
 
+# Procedure
+#   robustness_experiment
+# Parameters
+#  none
+# Purpose
+#   calculates and plots robustness for each combination of S, C, model, and ordering
+# Produces
+#   results, an array of plots
+# Preconditions
+#   none
+# Postconditions
+#   none
+
 function robustness_experiment()
     S = [25, 50, 100, 200]
     Cs = [.05, .10, .15, .30]
@@ -64,6 +77,19 @@ end
 # species before checking for collapse.
 # @pre Again, essentially nothing
 # @post Another 4 x 4 x 3 x 5 tensor, this time holding the rates of collapse
+
+# Procedure
+#   web_collapse_experiment
+# Parameters
+#   none
+# Purpose
+#   calculates and plots web collapse for each combination of S,C, model, and removal
+# Produces
+#   results, an array of plots
+# Preconditions
+#   none
+# Postconditions
+#   none
 
 function web_collapse_experiment()
     S = [25, 50, 100, 200]
@@ -111,6 +137,21 @@ end
 #      in an adjacency matrix and vector.
 # @post Returns the proportion of species removed through primary
 #       extinction before only half the web remained.
+
+# Procedure
+#   find_robustness
+# Parameters
+#   g, an array
+#   m, a function
+# Purpose
+#   calculates the robustness of a model and extinction order
+# Produces
+#   robustness, a float
+# Preconditions
+#   none
+# Postconditions
+#   none
+
 function find_robustness(g, m)
     iterations = 0
 
@@ -135,6 +176,21 @@ end
 #      in an adjacency matrix and vector.
 # @post Returns whether no species remain in the web after removing
 #       eighty percent of them.
+
+# Procedure
+#   collapse
+# Parameters
+#   g, an array
+#   m, a function
+# Purpose
+#   determines if a web collapses
+# Produces
+#   collapse, an int
+# Preconditions
+#   none
+# Postconditions
+#   none
+
 function collapse(g, m)
     S = size(g, 1)
     species = fill(1, S)
@@ -156,6 +212,21 @@ end
 # @post Doesn't return anything, rather simply removes the species
 #       by altering the species vector.
 
+# Procedure
+#   remove_species
+# Parameters
+#   g, an array
+#   species, a list
+#   x, an int
+# Purpose
+#   removes a species connections from a graph
+# Produces
+#   none
+# Preconditions
+#   none
+# Postconditions
+#   row_sum(g, x) == 0
+
 function remove_species(g, species, x)
     S = size(g, 1)
     
@@ -175,6 +246,21 @@ end
 # has any food sources.
 # @pre g is a m x n matrix, 1 <= i <= n
 # @post The sum of values in column i
+
+# Procedure
+#   col_sum
+# Parameters
+#   g, an array
+#   i, an int
+# Purpose
+#   computes the sum of a column
+# Produces
+#   accum, an int
+# Preconditions
+#   none
+# Postconditions
+#   none
+
 function col_sum(g, i)
     accum = 0
     for j in 1:size(g, 2)
@@ -189,6 +275,20 @@ end
 # @pre g is an adjacency matrix, s is a vector
 # @post returns x, 1 <= x <= S
 
+# Procedure
+#   rand_removal
+# Parameters
+#   g, an array
+#   s, a list
+# Purpose
+#   removes a random element of s
+# Produces
+#   x, an int
+# Preconditions
+#   none
+# Postconditions
+#   none
+
 function rand_removal(g, s)
     x = rand(1:length(s))
     while s[x] == 0
@@ -202,6 +302,20 @@ end
 # yet been removed.
 # @pre g is adjacency matrix, s is vector of length S
 # @post x is the vertex of greatest degree. s[x] = 1
+
+# Procedure
+#   most_cnnected_removal
+# Parameters
+#   g, an array
+#   s, a list
+# Purpose
+#   removes the most connected element in g from s
+# Produces
+#   index, an int
+# Preconditions
+#   none
+# Postconditions
+#   none
 
 function most_connected_removal(g, s)
     sums = []
@@ -234,6 +348,20 @@ end
 # yet been removed.
 # @pre g is adjacency matrix, s is vector of length S
 # @post x is the vertex of least degree. s[x] = 1
+
+# Procedure
+#   least_connected_removal
+# Parameters
+#   g, an array
+#   s, a list
+# Purpose
+#   removes the least connected element in g from s
+# Produces
+#   x, an int
+# Preconditions
+#   none
+# Postconditions
+#   none
 
 function least_connected_removal(g, s)
     sums = []
