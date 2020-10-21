@@ -9,6 +9,20 @@
 
 using Random, Distributions
 
+# Procedure
+#   null_model
+# Parameters
+#   S, an integer
+#   C, a float
+# Purpose
+#   Generates the adjacency matrix of a random null model food web
+# Produces
+#   G, a S x S matrix
+# Preconditions
+#   S > 0
+#   0 < C < 1
+# Postconditions
+#   none
 function null_model(S, C)
     G = fill(0, S, S)
     
